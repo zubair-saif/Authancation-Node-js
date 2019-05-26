@@ -10,9 +10,10 @@ const optn={};
 optn.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 optn.secretOrKey=keys.secretOrKey;
 
+
 module.exports=passport=>{
     passport.use(new jwtStrategy(optn,(jwt_payload , done)=>{
+        done(null,jwt_payload);
 
-        console.log(jwt_payload)
     }));
 }

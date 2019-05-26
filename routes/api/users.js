@@ -116,7 +116,7 @@ router.post('/login',(req , res)=>{
 
             //user matched
 
-            const payload={id:users.id,name:users.name,password:users.password,avatar:users.avatar} //create jwk payload
+            const payload={id:users.id} //create jwk payload
             
             //sign token
             jwt.sign(payload,
@@ -148,8 +148,10 @@ router.post('/login',(req , res)=>{
 //@Description: current routes returning current user
 //@Access:      Private
 
-router.get('/current',passport.authenticate('jwt',{session:false}), (req , res)=>{
-    res.json({msg:'success'});
+router.get('/current',passport.authenticate('jwt',{session:false},
+
+), (req, res, next)=>{
+    res.json(req.user);
 })
 
 module.exports=router;
