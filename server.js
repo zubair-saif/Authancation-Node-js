@@ -1,47 +1,38 @@
-const express =require('express');
-const mongoose =require('mongoose');
-const bodyParser=require('body-parser');
-const passport=require('passport');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const passport = require('passport');
 
 const users = require('./routes/api/users');
 const profile = require('./routes/api/profile');
 const posts = require('./routes/api/posts');
 
-const app =express();
+const app = express();
 
-//body parser middleware
-
-app.use(bodyParser.urlencoded({extended:false}));
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// DB Config
+const db = require('./config/keys').mongoURI;
 
-//Db config
-const db=require("./config/keys").mongoURI;
-
-//Mongoose connect to a databases
-
+// Connect to MongoDB
 mongoose
-.connect(db,{ useNewUrlParser: true })
-.then(()=>(console.log("mongoose connected"))).catch(err=>console.log(err));
+  .connect(db)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
-//main Route of the application
-
-//passport middleware
-
+// Passport middleware
 app.use(passport.initialize());
-//passport config
+
+// Passport Config
 require('./config/passport')(passport);
 
-//use routes
-
-app.use('/api/users',users);
-app.use('/api/profile',profile);
+// Use Routes
+app.use('/api/users', users);
+app.use('/api/profile', profile);
 app.use('/api/posts', posts);
 
+const port = process.env.PORT || 7000;
 
-//app listening on port and defining heroku or other envirnoment variable here 
-
-const port =process.env.PORT || 7000;
-app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
-});
+app.listen(port, () => console.log(`Server running on port ${port}`));
